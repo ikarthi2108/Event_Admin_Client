@@ -8,8 +8,7 @@ const App = () => {
     <Router>
       <div className="min-h-screen bg-gray-100">
         <Routes>
-          <Route path="/" element={<Navigate to="/admin" />} />
-          <Route path="/admin" element={<AdminHome />} />
+          <Route path="/" element={<AdminHome />} />
           <Route path="/add-venue" element={<WeddingVenueForm />} />
         </Routes>
       </div>
