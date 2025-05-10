@@ -1,7 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { CalendarDays, MapPin, Camera, BarChart } from "lucide-react";
 
 const AdminHome = () => {
+  const navigate = useNavigate();
+
   const quickActions = [
     {
       title: "Add New Venue",
@@ -38,6 +41,10 @@ const AdminHome = () => {
     },
   ];
 
+  const handleNavigate = (link) => {
+    navigate(link);
+  };
+
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-8">
       <div className="mb-6">
@@ -47,10 +54,10 @@ const AdminHome = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {quickActions.map((action, index) => (
-          <a
+          <div
             key={index}
-            href={action.link}
-            className={`group relative overflow-hidden ${action.bg} ${action.hoverBg} rounded-xl shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-xl`}
+            onClick={() => handleNavigate(action.link)}
+            className={`cursor-pointer group relative overflow-hidden ${action.bg} ${action.hoverBg} rounded-xl shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-xl`}
           >
             <div className="absolute top-0 right-0 w-32 h-32 -mr-12 -mt-12 rounded-full opacity-20 bg-white"></div>
             <div className="p-6">
@@ -79,7 +86,7 @@ const AdminHome = () => {
                 </svg>
               </div>
             </div>
-          </a>
+          </div>
         ))}
       </div>
     </div>
