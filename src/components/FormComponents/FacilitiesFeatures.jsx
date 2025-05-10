@@ -1,13 +1,35 @@
-const FacilitiesFeatures = ({ formData, handleChange, prevSection, nextSection }) => {
+import { useState } from "react";
+
+const FacilitiesFeatures = ({ prevSection, nextSection }) => {
+  const [formData, setFormData] = useState({
+    hasAC: false,
+    brideGroomRoomAC: false,
+    hasGenerator: false,
+    carParkingCount: "",
+    hasDJ: false,
+    guestRoomCount: "",
+    decoration: ""
+  });
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
   return (
     <>
       <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h2 className="text-xl font-semibold text-green-800 mb-4 border-b pb-2">Comfort & Facilities</h2>
-        
+        <h2 className="text-xl font-semibold text-green-800 mb-4 border-b pb-2">
+          Comfort & Facilities
+        </h2>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
             <h3 className="font-medium text-green-700 mb-3">Climate Control</h3>
-            
+
             <div className="flex items-center mb-4">
               <input
                 type="checkbox"
@@ -17,9 +39,11 @@ const FacilitiesFeatures = ({ formData, handleChange, prevSection, nextSection }
                 onChange={handleChange}
                 className="h-5 w-5 text-green-600 focus:ring-green-500 border-gray-300 rounded transition-all"
               />
-              <label htmlFor="hasAC" className="ml-3 text-gray-700">Venue is Air Conditioned</label>
+              <label htmlFor="hasAC" className="ml-3 text-gray-700">
+                Venue is Air Conditioned
+              </label>
             </div>
-            
+
             <div className="flex items-center">
               <input
                 type="checkbox"
@@ -29,13 +53,15 @@ const FacilitiesFeatures = ({ formData, handleChange, prevSection, nextSection }
                 onChange={handleChange}
                 className="h-5 w-5 text-green-600 focus:ring-green-500 border-gray-300 rounded transition-all"
               />
-              <label htmlFor="brideGroomRoomAC" className="ml-3 text-gray-700">Bride/Groom Rooms with AC</label>
+              <label htmlFor="brideGroomRoomAC" className="ml-3 text-gray-700">
+                Bride/Groom Rooms with AC
+              </label>
             </div>
           </div>
-          
+
           <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
             <h3 className="font-medium text-green-700 mb-3">Power & Parking</h3>
-            
+
             <div className="flex items-center mb-4">
               <input
                 type="checkbox"
@@ -45,12 +71,17 @@ const FacilitiesFeatures = ({ formData, handleChange, prevSection, nextSection }
                 onChange={handleChange}
                 className="h-5 w-5 text-green-600 focus:ring-green-500 border-gray-300 rounded transition-all"
               />
-              <label htmlFor="hasGenerator" className="ml-3 text-gray-700">Generator Backup Available</label>
+              <label htmlFor="hasGenerator" className="ml-3 text-gray-700">
+                Generator Backup Available
+              </label>
             </div>
-            
+
             <div className="space-y-3">
               <div>
-                <label htmlFor="carParkingCount" className="block text-sm text-gray-600 mb-1">
+                <label
+                  htmlFor="carParkingCount"
+                  className="block text-sm text-gray-600 mb-1"
+                >
                   Number of Car Parking Spaces
                 </label>
                 <input
@@ -67,11 +98,11 @@ const FacilitiesFeatures = ({ formData, handleChange, prevSection, nextSection }
             </div>
           </div>
         </div>
-        
+
         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
             <h3 className="font-medium text-green-700 mb-3">Entertainment</h3>
-            
+
             <div className="flex items-center">
               <input
                 type="checkbox"
@@ -81,15 +112,20 @@ const FacilitiesFeatures = ({ formData, handleChange, prevSection, nextSection }
                 onChange={handleChange}
                 className="h-5 w-5 text-green-600 focus:ring-green-500 border-gray-300 rounded transition-all"
               />
-              <label htmlFor="hasDJ" className="ml-3 text-gray-700">DJ Allowed</label>
+              <label htmlFor="hasDJ" className="ml-3 text-gray-700">
+                DJ Allowed
+              </label>
             </div>
           </div>
-          
+
           <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
             <h3 className="font-medium text-green-700 mb-3">Accommodation</h3>
-            
+
             <div>
-              <label htmlFor="guestRoomCount" className="block text-sm text-gray-600 mb-1">
+              <label
+                htmlFor="guestRoomCount"
+                className="block text-sm text-gray-600 mb-1"
+              >
                 Guest Rooms Available
               </label>
               <input
@@ -105,9 +141,12 @@ const FacilitiesFeatures = ({ formData, handleChange, prevSection, nextSection }
             </div>
           </div>
         </div>
-        
+
         <div className="mt-6">
-          <label htmlFor="decoration" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="decoration"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Decoration Details
           </label>
           <textarea
@@ -121,7 +160,7 @@ const FacilitiesFeatures = ({ formData, handleChange, prevSection, nextSection }
           ></textarea>
         </div>
       </div>
-      
+
       <div className="flex justify-between">
         <button
           type="button"
@@ -130,6 +169,7 @@ const FacilitiesFeatures = ({ formData, handleChange, prevSection, nextSection }
         >
           Previous
         </button>
+
         <button
           type="button"
           onClick={nextSection}

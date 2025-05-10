@@ -1,11 +1,29 @@
-import { MapPin, DollarSign, Info, Calendar } from 'lucide-react';
+import { useState } from "react";
+import { MapPin, DollarSign, Info, Calendar } from "lucide-react";
 
-const BasicInformation = ({ formData, handleChange, nextSection }) => {
+const BasicInformation = ({ nextSection }) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    location: "",
+    address: "",
+    addressLink: "",
+    price: "",
+    establishmentYear: ""
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   return (
     <>
       <div className="bg-white p-6 rounded-lg shadow-md mb-6">
         <h2 className="text-xl font-semibold text-green-800 mb-4 border-b pb-2">Venue Details</h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="group">
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1 group-focus-within:text-green-600 transition-colors">
@@ -26,7 +44,7 @@ const BasicInformation = ({ formData, handleChange, nextSection }) => {
               </div>
             </div>
           </div>
-          
+
           <div className="group">
             <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1 group-focus-within:text-green-600 transition-colors">
               Location <span className="text-red-500">*</span>
@@ -47,7 +65,7 @@ const BasicInformation = ({ formData, handleChange, nextSection }) => {
             </div>
           </div>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div className="md:col-span-2 group">
             <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1 group-focus-within:text-green-600 transition-colors">
@@ -63,7 +81,7 @@ const BasicInformation = ({ formData, handleChange, nextSection }) => {
               required
             ></textarea>
           </div>
-          
+
           <div className="group">
             <label htmlFor="addressLink" className="block text-sm font-medium text-gray-700 mb-1 group-focus-within:text-green-600 transition-colors">
               Maps Link
@@ -79,7 +97,7 @@ const BasicInformation = ({ formData, handleChange, nextSection }) => {
             />
           </div>
         </div>
-        
+
         <div className="mt-6 group">
           <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1 group-focus-within:text-green-600 transition-colors">
             Price Range (₹) <span className="text-red-500">*</span>
@@ -100,7 +118,7 @@ const BasicInformation = ({ formData, handleChange, nextSection }) => {
             </div>
           </div>
         </div>
-        
+
         <div className="mt-6 group">
           <label htmlFor="establishmentYear" className="block text-sm font-medium text-gray-700 mb-1 group-focus-within:text-green-600 transition-colors">
             Establishment Year
@@ -123,7 +141,7 @@ const BasicInformation = ({ formData, handleChange, nextSection }) => {
           </div>
         </div>
       </div>
-      
+
       <div className="flex justify-end">
         <button
           type="button"

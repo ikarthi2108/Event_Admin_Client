@@ -9,6 +9,8 @@ import FoodAndSpace from './FormComponents/FoodAndSpace';
 import AdditionalDetails from './FormComponents/AdditionalDetails';
 import ServicesOffered from './FormComponents/ServicesOffered';
 import FAQSection from './FormComponents/FAQSection';
+import AmenitiesSection from './FormComponents/AmenitiesSection';
+import PaymentPoliciesSection from './FormComponents/PaymentPoliciesSection';
 
 const WeddingVenueForm = () => {
   const [formData, setFormData] = useState({
@@ -43,8 +45,6 @@ const WeddingVenueForm = () => {
   const [albumImagePreviews, setAlbumImagePreviews] = useState([]);
   const [activeSection, setActiveSection] = useState(1);
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [currentAmenity, setCurrentAmenity] = useState('');
-  const [currentPaymentPolicy, setCurrentPaymentPolicy] = useState('');
   const [currentService, setCurrentService] = useState({ name: '', price: '' });
   const [currentFAQ, setCurrentFAQ] = useState({ question: '', answer: '' });
 
@@ -120,60 +120,6 @@ const WeddingVenueForm = () => {
     }
   };
 
-  const handleKeyDownAmenity = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      addAmenity();
-    }
-  };
-
-  const addAmenity = () => {
-    if (currentAmenity.trim() === '') return;
-    setFormData((prevData) => ({
-      ...prevData,
-      amenities: [...prevData.amenities, currentAmenity.trim()]
-    }));
-    setCurrentAmenity('');
-  };
-
-  const removeAmenity = (index) => {
-    setFormData((prevData) => {
-      const newAmenities = [...prevData.amenities];
-      newAmenities.splice(index, 1);
-      return {
-        ...prevData,
-        amenities: newAmenities
-      };
-    });
-  };
-
-  const handleKeyDownPolicy = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      addPaymentPolicy();
-    }
-  };
-
-  const addPaymentPolicy = () => {
-    if (currentPaymentPolicy.trim() === '') return;
-    setFormData((prevData) => ({
-      ...prevData,
-      paymentPolicies: [...prevData.paymentPolicies, currentPaymentPolicy.trim()]
-    }));
-    setCurrentPaymentPolicy('');
-  };
-
-  const removePaymentPolicy = (index) => {
-    setFormData((prevData) => {
-      const newPolicies = [...prevData.paymentPolicies];
-      newPolicies.splice(index, 1);
-      return {
-        ...prevData,
-        paymentPolicies: newPolicies
-      };
-    });
-  };
-
   const handleCustomFieldChange = (field) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -229,8 +175,6 @@ const WeddingVenueForm = () => {
     });
     setDisplayImagePreviews([]);
     setAlbumImagePreviews([]);
-    setCurrentAmenity('');
-    setCurrentPaymentPolicy('');
     setCurrentService({ name: '', price: '' });
     setCurrentFAQ({ question: '', answer: '' });
     setFormSubmitted(false);
@@ -330,103 +274,41 @@ const WeddingVenueForm = () => {
             </FormSection>
 
             <FormSection id={5}>
-              <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="bg-white p-6 rounded-lg shadow-md space-y-8">
                 <h2 className="text-2xl font-bold text-green-800 mb-6">Amenities & Policies</h2>
                 
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="text-lg font-semibold mb-3">Venue Amenities</h3>
-                    <div className="flex items-center mb-3">
-                      <input
-                        type="text"
-                        value={currentAmenity}
-                        onChange={(e) => setCurrentAmenity(e.target.value)}
-                        onKeyDown={handleKeyDownAmenity}
-                        placeholder="Add amenity (e.g., 4000 Square Feet Capacity)"
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                      />
-                      <button
-                        type="button"
-                        onClick={addAmenity}
-                        className="ml-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-                      >
-                        <Plus size={20} />
-                      </button>
-                    </div>
-                    <div className="space-y-2">
-                      {formData.amenities.map((amenity, index) => (
-                        <div key={index} className="flex items-center bg-gray-50 p-3 rounded-md">
-                          <span className="flex-1">{amenity}</span>
-                          <button
-                            type="button"
-                            onClick={() => removeAmenity(index)}
-                            className="text-red-500 hover:text-red-700"
-                          >
-                            <X size={18} />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                <AmenitiesSection
+                  amenities={formData.amenities}
+                  setAmenities={(amenities) => setFormData({ ...formData, amenities })}
+                />
 
-                  <div>
-                    <h3 className="text-lg font-semibold mb-3">Payment Policies</h3>
-                    <div className="flex items-center mb-3">
-                      <input
-                        type="text"
-                        value={currentPaymentPolicy}
-                        onChange={(e) => setCurrentPaymentPolicy(e.target.value)}
-                        onKeyDown={handleKeyDownPolicy}
-                        placeholder="Add payment policy (e.g., 50% Payment On Booking)"
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                      />
-                      <button
-                        type="button"
-                        onClick={addPaymentPolicy}
-                        className="ml-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-                      >
-                        <Plus size={20} />
-                      </button>
-                    </div>
-                    <div className="space-y-2">
-                      {formData.paymentPolicies.map((policy, index) => (
-                        <div key={index} className="flex items-center bg-gray-50 p-3 rounded-md">
-                          <span className="flex-1">{policy}</span>
-                          <button
-                            type="button"
-                            onClick={() => removePaymentPolicy(index)}
-                            className="text-red-500 hover:text-red-700"
-                          >
-                            <X size={18} />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                <PaymentPoliciesSection
+                  paymentPolicies={formData.paymentPolicies}
+                  setPaymentPolicies={(paymentPolicies) => setFormData({ ...formData, paymentPolicies })}
+                />
 
-                  <ServicesOffered
-                    services={formData.services}
-                    setServices={(services) => setFormData({ ...formData, services })}
-                    currentService={currentService}
-                    setCurrentService={setCurrentService}
-                  />
+                <ServicesOffered
+                  services={formData.services}
+                  setServices={(services) => setFormData({ ...formData, services })}
+                  currentService={currentService}
+                  setCurrentService={setCurrentService}
+                />
 
-                  <div className="flex justify-between pt-4">
-                    <button
-                      type="button"
-                      onClick={() => setActiveSection(4)}
-                      className="px-6 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                    >
-                      Back
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setActiveSection(6)}
-                      className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-                    >
-                      Next
-                    </button>
-                  </div>
+                <div className="flex justify-between pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setActiveSection(4)}
+                    className="px-6 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveSection(6)}
+                    className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  >
+                    Next
+                  </button>
                 </div>
               </div>
             </FormSection>
