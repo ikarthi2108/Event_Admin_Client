@@ -1,10 +1,6 @@
 import { X } from 'lucide-react';
-import { useState } from 'react';
 
-const FAQSection = () => {
-  const [faqs, setFaqs] = useState([]);
-  const [currentFAQ, setCurrentFAQ] = useState({ question: '', answer: '' });
-
+const FAQSection = ({ faqs, setFaqs, currentFAQ, setCurrentFAQ, errors }) => {
   const handleFAQChange = (e) => {
     const { name, value } = e.target;
     setCurrentFAQ({
@@ -13,17 +9,17 @@ const FAQSection = () => {
     });
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      addFAQ();
-    }
-  };
-
   const addFAQ = () => {
-    if (currentFAQ.question.trim() === '' || currentFAQ.answer.trim() === '') return;
+    if (currentFAQ.question.trim() === '' || currentFAQ.answer.trim() === '') {
+      setErrors((prev) => ({
+        ...prev,
+        faq: 'Both Question and Answer are required',
+      }));
+      return;
+    }
     setFaqs([...faqs, { ...currentFAQ }]);
     setCurrentFAQ({ question: '', answer: '' });
+    setErrors((prev) => ({ ...prev, faq: '' }));
   };
 
   const removeFAQ = (index) => {
@@ -34,9 +30,10 @@ const FAQSection = () => {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-      <h2 className="text-xl font-semibold text-green-800 mb-4 border-b pb-2">Frequently Asked Questions</h2>
+      <h2 className="text-xl font-semibold text-green-800 mb-4 border-b pb-2">
+        Frequently Asked Questions
+      </h2>
 
-      {/* Input Fields */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Question</label>
@@ -45,9 +42,10 @@ const FAQSection = () => {
             name="question"
             value={currentFAQ.question}
             onChange={handleFAQChange}
-            onKeyDown={handleKeyDown}
             placeholder="Enter question"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            className={`w-full px-4 py-2 border ${
+              errors.faq ? 'border-red-500' : 'border-gray-300'
+            } rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
           />
         </div>
         <div>
@@ -57,9 +55,10 @@ const FAQSection = () => {
             name="answer"
             value={currentFAQ.answer}
             onChange={handleFAQChange}
-            onKeyDown={handleKeyDown}
             placeholder="Enter answer"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            className={`w-full px-4 py-2 border ${
+              errors.faq ? 'border-red-500' : 'border-gray-300'
+            } rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
           />
         </div>
       </div>
@@ -71,8 +70,8 @@ const FAQSection = () => {
       >
         Add FAQ
       </button>
+      {errors.faq && <p className="text-red-500 text-xs mb-2">{errors.faq}</p>}
 
-      {/* FAQ List */}
       <div className="space-y-3">
         {faqs.length > 0 ? (
           faqs.map((faq, index) => (

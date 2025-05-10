@@ -1,21 +1,29 @@
 import { Plus, X } from 'lucide-react';
-import { useState } from 'react';
 
-const ServicesOffered = () => {
-  const [services, setServices] = useState([]);
-  const [currentService, setCurrentService] = useState({ name: '', price: '' });
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      addService();
-    }
+const ServicesOffered = ({ services, setServices, currentService, setCurrentService, errors }) => {
+  const handleServiceChange = (e) => {
+    const { name, value } = e.target;
+    setCurrentService({ ...currentService, [name]: value });
   };
 
   const addService = () => {
-    if (currentService.name.trim() === '' || currentService.price.trim() === '') return;
+    if (currentService.name.trim() === '' || currentService.price.trim() === '') {
+      setErrors((prev) => ({
+        ...prev,
+        service: 'Both Service Name and Price are required',
+      }));
+      return;
+    }
+    if (isNaN(currentService.price) || currentService.price < 0) {
+      setErrors((prev) => ({
+        ...prev,
+        service: 'Price must be a non-negative number',
+      }));
+      return;
+    }
     setServices([...services, { ...currentService }]);
     setCurrentService({ name: '', price: '' });
+    setErrors((prev) => ({ ...prev, service: '' }));
   };
 
   const removeService = (index) => {
@@ -28,17 +36,18 @@ const ServicesOffered = () => {
     <div className="bg-white p-6 rounded-lg shadow-md mb-6">
       <h3 className="text-lg font-semibold mb-4 border-b pb-2">Services Offered</h3>
 
-      {/* Input Fields */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Service Name</label>
           <input
             type="text"
+            name="name"
             value={currentService.name}
-            onChange={(e) => setCurrentService({ ...currentService, name: e.target.value })}
-            onKeyDown={handleKeyDown}
+            onChange={handleServiceChange}
             placeholder="e.g., Non-Veg Pricing"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            className={`w-full px-4 py-2 border ${
+              errors.service ? 'border-red-500' : 'border-gray-300'
+            } rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
           />
         </div>
 
@@ -47,11 +56,13 @@ const ServicesOffered = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹)</label>
             <input
               type="text"
+              name="price"
               value={currentService.price}
-              onChange={(e) => setCurrentService({ ...currentService, price: e.target.value })}
-              onKeyDown={handleKeyDown}
+              onChange={handleServiceChange}
               placeholder="e.g., 1800"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              className={`w-full px-4 py-2 border ${
+                errors.service ? 'border-red-500' : 'border-gray-300'
+              } rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
             />
           </div>
           <button
@@ -63,8 +74,8 @@ const ServicesOffered = () => {
           </button>
         </div>
       </div>
+      {errors.service && <p className="text-red-500 text-xs mb-2">{errors.service}</p>}
 
-      {/* Services List */}
       <div className="space-y-2">
         {services.length > 0 ? (
           services.map((service, index) => (

@@ -1,15 +1,8 @@
-import React from 'react';
 import { Plus, X } from 'lucide-react';
+import { useState } from 'react';
 
 const AmenitiesSection = ({ amenities, setAmenities }) => {
-  const [currentAmenity, setCurrentAmenity] = React.useState('');
-
-  const handleKeyDownAmenity = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      addAmenity();
-    }
-  };
+  const [currentAmenity, setCurrentAmenity] = useState('');
 
   const addAmenity = () => {
     if (currentAmenity.trim() === '') return;
@@ -31,7 +24,6 @@ const AmenitiesSection = ({ amenities, setAmenities }) => {
           type="text"
           value={currentAmenity}
           onChange={(e) => setCurrentAmenity(e.target.value)}
-          onKeyDown={handleKeyDownAmenity}
           placeholder="Add amenity (e.g., 4000 Square Feet Capacity)"
           className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
         />

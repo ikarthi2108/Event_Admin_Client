@@ -1,15 +1,8 @@
-import React from 'react';
 import { Plus, X } from 'lucide-react';
+import { useState } from 'react';
 
 const PaymentPoliciesSection = ({ paymentPolicies, setPaymentPolicies }) => {
-  const [currentPolicy, setCurrentPolicy] = React.useState('');
-
-  const handleKeyDownPolicy = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      addPolicy();
-    }
-  };
+  const [currentPolicy, setCurrentPolicy] = useState('');
 
   const addPolicy = () => {
     if (currentPolicy.trim() === '') return;
@@ -31,7 +24,6 @@ const PaymentPoliciesSection = ({ paymentPolicies, setPaymentPolicies }) => {
           type="text"
           value={currentPolicy}
           onChange={(e) => setCurrentPolicy(e.target.value)}
-          onKeyDown={handleKeyDownPolicy}
           placeholder="Add payment policy (e.g., 50% Payment On Booking)"
           className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
         />

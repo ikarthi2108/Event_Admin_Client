@@ -1,30 +1,8 @@
-import { useState } from "react";
-
-const FacilitiesFeatures = ({ prevSection, nextSection }) => {
-  const [formData, setFormData] = useState({
-    hasAC: false,
-    brideGroomRoomAC: false,
-    hasGenerator: false,
-    carParkingCount: "",
-    hasDJ: false,
-    guestRoomCount: "",
-    decoration: ""
-  });
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
+const FacilitiesFeatures = ({ formData, handleChange, prevSection, nextSection, errors }) => {
   return (
     <>
       <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h2 className="text-xl font-semibold text-green-800 mb-4 border-b pb-2">
-          Comfort & Facilities
-        </h2>
+        <h2 className="text-xl font-semibold text-green-800 mb-4 border-b pb-2">Comfort & Facilities</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
@@ -78,10 +56,7 @@ const FacilitiesFeatures = ({ prevSection, nextSection }) => {
 
             <div className="space-y-3">
               <div>
-                <label
-                  htmlFor="carParkingCount"
-                  className="block text-sm text-gray-600 mb-1"
-                >
+                <label htmlFor="carParkingCount" className="block text-sm text-gray-600 mb-1">
                   Number of Car Parking Spaces
                 </label>
                 <input
@@ -90,10 +65,15 @@ const FacilitiesFeatures = ({ prevSection, nextSection }) => {
                   name="carParkingCount"
                   value={formData.carParkingCount}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+                  className={`w-full px-3 py-2 border ${
+                    errors.carParkingCount ? 'border-red-500' : 'border-gray-300'
+                  } rounded-md focus:ring-green-500 focus:border-green-500`}
                   min="0"
                   placeholder="Enter number of cars"
                 />
+                {errors.carParkingCount && (
+                  <p className="text-red-500 text-xs mt-1">{errors.carParkingCount}</p>
+                )}
               </div>
             </div>
           </div>
@@ -122,10 +102,7 @@ const FacilitiesFeatures = ({ prevSection, nextSection }) => {
             <h3 className="font-medium text-green-700 mb-3">Accommodation</h3>
 
             <div>
-              <label
-                htmlFor="guestRoomCount"
-                className="block text-sm text-gray-600 mb-1"
-              >
+              <label htmlFor="guestRoomCount" className="block text-sm text-gray-600 mb-1">
                 Guest Rooms Available
               </label>
               <input
@@ -134,19 +111,21 @@ const FacilitiesFeatures = ({ prevSection, nextSection }) => {
                 name="guestRoomCount"
                 value={formData.guestRoomCount}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+                className={`w-full px-3 py-2 border ${
+                  errors.guestRoomCount ? 'border-red-500' : 'border-gray-300'
+                } rounded-md focus:ring-green-500 focus:border-green-500`}
                 min="0"
                 placeholder="Number of guest rooms"
               />
+              {errors.guestRoomCount && (
+                <p className="text-red-500 text-xs mt-1">{errors.guestRoomCount}</p>
+              )}
             </div>
           </div>
         </div>
 
         <div className="mt-6">
-          <label
-            htmlFor="decoration"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
+          <label htmlFor="decoration" className="block text-sm font-medium text-gray-700 mb-1">
             Decoration Details
           </label>
           <textarea
