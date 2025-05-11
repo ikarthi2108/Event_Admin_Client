@@ -357,8 +357,8 @@ const WeddingVenueForm = () => {
           formDataToSend.append('albumImages', file);
         });
 
-        // const response = await axios.post('https://event-admin-server-3pka.onrender.com/api/venues', formDataToSend, {
-          const response = await axios.post('http://localhost:5000/api/venues', formDataToSend, {
+        const response = await axios.post('https://event-admin-server-3pka.onrender.com/api/venues', formDataToSend, {
+          // const response = await axios.post('http://localhost:5000/api/venues', formDataToSend, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
