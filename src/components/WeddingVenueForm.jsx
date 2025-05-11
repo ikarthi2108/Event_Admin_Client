@@ -1,12 +1,23 @@
-// WeddingVenueForm.jsx
 import React, { useState, useCallback, useMemo } from 'react';
 import { Calendar, MapPin, DollarSign, Check, Info, Image, X, Plus } from 'lucide-react';
 import axios from 'axios';
 
 const WeddingVenueForm = () => {
+  const tamilNaduDistricts = [
+    'Ariyalur', 'Chengalpattu', 'Chennai', 'Coimbatore', 'Cuddalore', 
+    'Dharmapuri', 'Dindigul', 'Erode', 'Kallakurichi', 'Kancheepuram', 
+    'Kanyakumari', 'Karur', 'Krishnagiri', 'Madurai', 'Mayiladuthurai', 
+    'Nagapattinam', 'Namakkal', 'Nilgiris', 'Perambalur', 'Pudukkottai', 
+    'Ramanathapuram', 'Ranipet', 'Salem', 'Sivaganga', 'Tenkasi', 
+    'Thanjavur', 'Theni', 'Thiruvallur', 'Thiruvarur', 'Thoothukudi', 
+    'Tiruchirappalli', 'Tirunelveli', 'Tirupathur', 'Tiruppur', 
+    'Tiruvannamalai', 'Vellore', 'Viluppuram', 'Virudhunagar'
+  ];
+
   const [formData, setFormData] = useState({
     name: '',
     location: '',
+    district: '',
     address: '',
     addressLink: '',
     price: '',
@@ -30,6 +41,7 @@ const WeddingVenueForm = () => {
     services: [],
     faqs: [],
     customFields: [],
+    otherInformation: [],
   });
 
   const [displayImagePreviews, setDisplayImagePreviews] = useState([]);
@@ -41,6 +53,7 @@ const WeddingVenueForm = () => {
   const [currentCustomField, setCurrentCustomField] = useState({ fieldName: '', fieldValue: '' });
   const [currentAmenity, setCurrentAmenity] = useState('');
   const [currentPolicy, setCurrentPolicy] = useState('');
+  const [currentOtherInfo, setCurrentOtherInfo] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
 
@@ -50,6 +63,7 @@ const WeddingVenueForm = () => {
     // Required fields
     if (!formData.name.trim()) newErrors.name = 'Venue Name is required';
     if (!formData.location.trim()) newErrors.location = 'Location is required';
+    if (!formData.district.trim()) newErrors.district = 'District is required';
     if (!formData.address.trim()) newErrors.address = 'Address is required';
     if (!formData.price.trim()) newErrors.price = 'Price Range is required';
     if (!formData.vegNonVeg) newErrors.vegNonVeg = 'Food Option is required';
@@ -134,7 +148,7 @@ const WeddingVenueForm = () => {
           [name]: [...prevData[name], ...validFiles],
         };
       } else {
-        return { ...prevData, [name]: value };
+        return { ...prevData, [name]: name === 'district' ? value.toLowerCase() : value };
       }
     });
 
@@ -208,6 +222,23 @@ const WeddingVenueForm = () => {
       const newAmenities = [...prev.amenities];
       newAmenities.splice(index, 1);
       return { ...prev, amenities: newAmenities };
+    });
+  }, []);
+
+  const addOtherInfo = useCallback(() => {
+    if (currentOtherInfo.trim() === '') return;
+    setFormData((prev) => ({
+      ...prev,
+      otherInformation: [...prev.otherInformation, currentOtherInfo.trim()],
+    }));
+    setCurrentOtherInfo('');
+  }, [currentOtherInfo]);
+
+  const removeOtherInfo = useCallback((index) => {
+    setFormData((prev) => {
+      const newOtherInfo = [...prev.otherInformation];
+      newOtherInfo.splice(index, 1);
+      return { ...prev, otherInformation: newOtherInfo };
     });
   }, []);
 
@@ -326,8 +357,8 @@ const WeddingVenueForm = () => {
           formDataToSend.append('albumImages', file);
         });
 
-        // const response = await axios.post('http://localhost:5000/api/venues', formDataToSend, {
-          const response = await axios.post('https://event-admin-server-3pka.onrender.com/api/venues', formDataToSend, {
+        // const response = await axios.post('https://event-admin-server-3pka.onrender.com/api/venues', formDataToSend, {
+          const response = await axios.post('http://localhost:5000/api/venues', formDataToSend, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -350,6 +381,7 @@ const WeddingVenueForm = () => {
     setFormData({
       name: '',
       location: '',
+      district: '',
       address: '',
       addressLink: '',
       price: '',
@@ -373,6 +405,7 @@ const WeddingVenueForm = () => {
       services: [],
       faqs: [],
       customFields: [],
+      otherInformation: [],
     });
     setDisplayImagePreviews((prev) => {
       prev.forEach(URL.revokeObjectURL);
@@ -387,6 +420,7 @@ const WeddingVenueForm = () => {
     setCurrentCustomField({ fieldName: '', fieldValue: '' });
     setCurrentAmenity('');
     setCurrentPolicy('');
+    setCurrentOtherInfo('');
     setFormSubmitted(false);
     setActiveSection(1);
     setErrors({});
@@ -408,6 +442,8 @@ const WeddingVenueForm = () => {
     ({ id, children }) => {
       if (activeSection !== id) return null;
       return <div className="animate-fadeIn">{children}</div>;
+
+
     },
     [activeSection]
   );
@@ -514,6 +550,38 @@ const WeddingVenueForm = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                  <div className="group">
+                    <label
+                      htmlFor="district"
+                      className="block text-sm font-medium text-gray-700 mb-1 group-focus-within:text-green-600 transition-colors"
+                    >
+                      District <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="district"
+                        name="district"
+                        value={formData.district}
+                        onChange={handleChange}
+                        className={`w-full pl-10 pr-4 py-3 border ${
+                          errors.district ? 'border-red-500' : 'border-gray-300'
+                        } rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all`}
+                        required
+                      >
+                        <option value="">Select District</option>
+                        {tamilNaduDistricts.map((district) => (
+                          <option key={district} value={district}>
+                            {district}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="absolute left-3 top-3 text-gray-400">
+                        <MapPin size={18} />
+                      </div>
+                    </div>
+                    {errors.district && <p className="text-red-500 text-xs mt-1">{errors.district}</p>}
+                  </div>
+
                   <div className="md:col-span-2 group">
                     <label
                       htmlFor="address"
@@ -898,6 +966,7 @@ const WeddingVenueForm = () => {
                       )}
                     </div>
 
+
                     <div>
                       <label htmlFor="diningCapacity" className="block text-sm text-gray-600 mb-1">
                         Dining Capacity
@@ -1169,6 +1238,41 @@ const WeddingVenueForm = () => {
                         <button
                           type="button"
                           onClick={() => removeAmenity(index)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <X size={18} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Other Information */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-3">Other Information</h3>
+                  <div className="flex items-center mb-3">
+                    <input
+                      type="text"
+                      value={currentOtherInfo}
+                      onChange={(e) => setCurrentOtherInfo(e.target.value)}
+                      placeholder="Add other information (e.g., Outdoor Stage Available)"
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={addOtherInfo}
+                      className="ml-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    >
+                      <Plus size={20} />
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    {formData.otherInformation.map((info, index) => (
+                      <div key={index} className="flex items-center bg-gray-50 p-3 rounded-md">
+                        <span className="flex-1">{info}</span>
+                        <button
+                          type="button"
+                          onClick={() => removeOtherInfo(index)}
                           className="text-red-500 hover:text-red-700"
                         >
                           <X size={18} />
